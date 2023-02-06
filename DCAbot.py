@@ -32,11 +32,13 @@ private_key = os.getenv('PRIVATE_KEY')
 signer_wallet = w3.eth.account.from_key(private_key)
 timestamp = int(time())
  
-number_of_dai = 100 #number of dai that will be swap for eth at each transaction
+number_of_dai = os.getenv('NUMBER_OF_DAI') #number of dai that will be swap for eth at each transaction
 
 #dai tokens must be approved because there are erc20
 tx_approve = contract_dai.functions.approve(address_router, 2**256 - 1).buildTransaction({'nonce': w3.eth.getTransactionCount(signer_wallet.address)})
 s_tx_approve = w3.eth.account.sign_transaction(tx_approve, private_key)
+
+period = os.getenv('PERIOD') #number of seconds you want to wait between each transaction 
 
 while True :
 
@@ -49,4 +51,4 @@ while True :
     balancedai = contract_dai.functions.balanceOf(signer_wallet.address).call() / decimals
     print(balancedai)
     print(balanceeth)
-    sleep(30) #number of seconds you want to wait between each transaction (here 30 sec for testing)
+    sleep(period) 
