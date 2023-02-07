@@ -30,8 +30,7 @@ decimals = 10**18 #number of decimals of eth and dai tokens
 
 private_key = os.getenv('PRIVATE_KEY')
 signer_wallet = w3.eth.account.from_key(private_key)
-timestamp = int(time())
- 
+
 number_of_dai = 100 #os.getenv('NUMBER_OF_DAI') #number of dai that will be swap for eth at each transaction
 
 #dai tokens must be approved because there are erc20
@@ -41,14 +40,15 @@ s_tx_approve = w3.eth.account.sign_transaction(tx_approve, private_key)
 period = int(os.getenv('PERIOD')) #number of seconds you want to wait between each transaction 
 
 while True :
+     timestamp = int(time())
 
      #swap dai for weth
-    tx_swap = router.functions.swapExactTokensForETH(number_of_dai*decimals, 0, [address_dai, address_weth], signer_wallet.address, timestamp+1000).buildTransaction({'nonce': w3.eth.getTransactionCount(signer_wallet.address), 'from': signer_wallet.address})
-    s_tx_swap = w3.eth.account.sign_transaction(tx_swap, private_key)
+     tx_swap = router.functions.swapExactTokensForETH(number_of_dai*decimals, 0, [address_dai, address_weth], signer_wallet.address, timestamp+1000).buildTransaction({'nonce': w3.eth.getTransactionCount(signer_wallet.address), 'from': signer_wallet.address})
+     s_tx_swap = w3.eth.account.sign_transaction(tx_swap, private_key)
 
      #print for testing
-    balanceeth = w3.eth.get_balance(signer_wallet.address) / decimals
-    balancedai = contract_dai.functions.balanceOf(signer_wallet.address).call() / decimals
-    print(balancedai)
-    print(balanceeth)
-    sleep(period)
+     balanceeth = w3.eth.get_balance(signer_wallet.address) / decimals
+     balancedai = contract_dai.functions.balanceOf(signer_wallet.address).call() / decimals
+     print(balancedai)
+     print(balanceeth)
+     sleep(period)
